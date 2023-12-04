@@ -1,48 +1,26 @@
 file = open('data.txt', 'r')
 data = file.read()
+data = data.split("\n")
 
-matrix = data.split("\n")
+returnValue = 0
 
-totalSum = 0
+for card in data:
+    winningNumbers = card.split("|")[0].split(":")[1].split(" ")
+    yourNumbers = card.split("|")[1].split(" ")
+    cardPoints = 0
+    for num in yourNumbers:
+        if num == "":
+            continue
+        if num in winningNumbers:
+            cardPoints += 1
+    
+    totalPoints = 0
+    if cardPoints > 0:
+        for i in range(1, cardPoints + 1):
+            if i == 1:
+                totalPoints += 1
+            else:
+                totalPoints *= 2
+    returnValue += totalPoints
 
-for i in range(0, len(matrix)):
-    j = 0
-    while j < len(matrix[i]):
-        if matrix[i][j].isdigit():
-            startNumIndex = j
-            while matrix[i][j].isdigit():
-                j += 1
-                if j == len(matrix[i]):
-                    break
-            numValue = matrix[i][startNumIndex:j]
-            
-            coppyI = i - 1
-            startNumIndex -= 1
-
-            copyStartNumIndex = startNumIndex
-            
-            for y in range(coppyI, coppyI + 3):
-                didYouFind = False
-                if y == len(matrix):
-                    break
-                if y < 0:
-                    continue
-                copyStartNumIndex = startNumIndex
-                while copyStartNumIndex < j + 1:
-                    if copyStartNumIndex == len(matrix[i]):
-                        break
-                    if copyStartNumIndex < 0:
-                        copyStartNumIndex += 1
-                        continue
-                    if matrix[y][copyStartNumIndex] == "#" or matrix[y][copyStartNumIndex] == "*" or matrix[y][copyStartNumIndex] == "+" or matrix[y][copyStartNumIndex] == "$" or matrix[y][copyStartNumIndex] == "-" or matrix[y][copyStartNumIndex] == "@" or matrix[y][copyStartNumIndex] == "=" or matrix[y][copyStartNumIndex] == "/" or matrix[y][copyStartNumIndex] == "%" or matrix[y][copyStartNumIndex] == "&":
-                        totalSum += int(numValue)
-                        didYouFind = True
-                        break
-                    copyStartNumIndex += 1
-                
-                if didYouFind:
-                    break
-
-        j += 1
-
-print(totalSum)
+print(returnValue)

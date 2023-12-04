@@ -2,53 +2,34 @@ from collections import defaultdict
 
 file = open('data.txt', 'r')
 data = file.read()
+data = data.split("\n")
 
-matrix = data.split("\n")
+mapOfCards = defaultdict(list)
 
-mapOfGears = defaultdict(list)
+totalNumberOfScratchCards = 0
+cardNum = 1
 
-for i in range(0, len(matrix)):
-    j = 0
-    while j < len(matrix[i]):
-        if matrix[i][j].isdigit():
-            startNumIndex = j
-            while matrix[i][j].isdigit():
-                j += 1
-                if j == len(matrix[i]):
-                    break
-            numValue = matrix[i][startNumIndex:j]
-            
-            coppyI = i - 1
-            startNumIndex -= 1
+# First Populate mapOfCards - Takes a few min
+for card in data:
+    winningNumbers = card.split("|")[0].split(":")[1].strip().split(" ")
+    yourNumbers = card.split("|")[1].strip().split(" ")
+    mapOfCards[cardNum] = [1, winningNumbers, yourNumbers]
+    cardNum += 1
 
-            copyStartNumIndex = startNumIndex
-            
-            for y in range(coppyI, coppyI + 3):
-                if y == len(matrix):
-                    break
-                if y < 0:
+for key, value in mapOfCards.items():
+    print(value[0])
+    totalNumberOfScratchCards += value[0]
+    if value[0] > 0:
+        for j in range(1, value[0] + 1):
+            cardPoints = 0
+            for num in value[2]:
+                if num == "":
                     continue
-                copyStartNumIndex = startNumIndex
-                while copyStartNumIndex < j + 1:
-                    if copyStartNumIndex == len(matrix[i]):
-                        break
-                    if copyStartNumIndex < 0:
-                        copyStartNumIndex += 1
-                        continue
-                    if matrix[y][copyStartNumIndex] == "*":
-                        mapOfGears[str(y) + ", " + str(copyStartNumIndex)].append(numValue)
-                        break
-                    copyStartNumIndex += 1
+                if num in value[1]:
+                    cardPoints += 1
+            if cardPoints > 0:
+                for i in range(1, cardPoints + 1):
+                    newValue = mapOfCards[key+i][0] + 1
+                    mapOfCards[key+i] = [newValue, mapOfCards[key+i][1], mapOfCards[key+i][2]]
 
-        j += 1
-
-# print(mapOfGears)
-sumGear = 0
-for key, value in mapOfGears.items():
-    if len(value) > 1:
-        multiplyGear = 1
-        for num in value:
-            multiplyGear *= int(num)
-        sumGear += multiplyGear
-
-print(sumGear)
+print(totalNumberOfScratchCards)
