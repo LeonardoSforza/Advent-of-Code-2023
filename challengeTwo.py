@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-file = open('data.txt', 'r')
+file = open('testData.txt', 'r')
 data = file.read()
 data = data.split("\n")
 
@@ -10,19 +10,14 @@ seeds = []
 seedNumSplit = data[0].split(":")[1].strip().split(" ")
 i = 0
 
-print("Starting Seeds")
-
 while i < len(seedNumSplit):
     if i % 2 == 0: # Even
-        print("Even Num")
-        startNum = int(seedNumSplit[i])
-        for j in range(i, int(seedNumSplit[i+1])):
-            seeds.append(int(startNum + j))
-            mapOfSeeds[int(startNum + j)] = [int(startNum + j)]
-            j +=1
+        startNum = [int(seedNumSplit[i]), [int(seedNumSplit[i+1])]]
+        seeds.append(startNum)
+        mapOfSeeds[int(seedNumSplit[i])] = [int(seedNumSplit[i])]
     i += 1
 
-print("Seeds done")
+print(seeds)
 
 i = 1
 while i < len(data):
